@@ -4,6 +4,7 @@ const themeEntries = require('./MapStore2/build/themes.js').themeEntries;
 const extractThemesPlugin = require('./MapStore2/build/themes.js').extractThemesPlugin;
 const ModuleFederationPlugin = require('./MapStore2/build/moduleFederation').plugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const buildConfig = require('./MapStore2/build/buildConfig');
 
 const paths = {
     base: __dirname,
@@ -12,7 +13,7 @@ const paths = {
     code: [path.join(__dirname, "js"), path.join(__dirname, "MapStore2", "web", "client")]
 };
 
-module.exports = require('./MapStore2/build/buildConfig')(
+const cfg = buildConfig(
     {
         'MapStoreExtension': path.join(__dirname, "js", "app"),
         'MapStoreExtension-embedded': path.join(__dirname, "MapStore2", "web", "client", "product", "embedded"),
@@ -52,3 +53,7 @@ module.exports = require('./MapStore2/build/buildConfig')(
         "@js": path.resolve(__dirname, "js")
     }
 );
+
+// stream are needed here in code
+cfg.resolve.fallback = {timers: false, http: false, https: false, stream: false, zlib: false};
+module.exports = cfg;
